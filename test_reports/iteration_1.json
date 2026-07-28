@@ -1,0 +1,24 @@
+{
+  "summary": "Tested login (email/password), dashboard KPIs & charts, and navigation across FDI, Tâches, Rapports, Utilisateurs pages plus 3 backend endpoints (dashboard/stats, forms/fdi, tasks). All 10 requested checks passed. Auth uses HttpOnly cookies (access_token/refresh_token) - not Bearer token in response body.",
+  "tested_scope": ["frontend", "backend", "auth", "integration"],
+  "passed": [
+    "Admin login with admin@ktechnology.ci / Admin@2026 works, cookies set, redirect to /dashboard",
+    "Dashboard shows 4 KPI cards: Total Fiches=0, Interventions (FDI)=0, Tâches=0, Incidents (RDI)=0",
+    "Dashboard renders 3 Recharts SVGs (Fiches par Type, Statut Interventions, Distribution Priorités) + Progression des Tâches counters",
+    "FDI page (/forms/fdi) loads with 'Nouvelle FDI' button visible",
+    "Tâches page (/tasks) shows three columns: À faire (0), En cours (0), Terminé (0) with 'Nouvelle Tâche' button",
+    "Rapports page (/reports) shows Export PDF (FRM/FDI/RDD/RDI) and Rapports d'Analyse (Mensuel, Technicien, Incidents, Performance) options",
+    "Utilisateurs page (/admin/users) lists 1 user: Administrateur (admin@ktechnology.ci, role=admin)",
+    "GET /api/dashboard/stats returns 200 with totals, fdi_by_status, tasks, recent_activity fields",
+    "GET /api/forms/fdi returns 200 with [] (empty array)",
+    "GET /api/tasks returns 200 with [] (empty array)",
+    "GET /api/auth/me returns 200 with admin user info",
+    "No 4xx/5xx network requests observed on any page navigation"
+  ],
+  "failed": [],
+  "action_items": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "retest_needed": false,
+  "full_testing_deferred": true,
+  "notes": "Auth is cookie-based (HttpOnly access_token cookie). Backend login response does NOT include access_token in JSON body - only user info; token is set via Set-Cookie. This is fine for the current frontend since it uses credentials: 'include'."
+}
