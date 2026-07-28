@@ -283,9 +283,9 @@ const CreateFDIForm = ({ onClose, onSuccess }) => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="urgent">Urgent</SelectItem>
-                  <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="faible">Faible</SelectItem>
+                  <SelectItem value="urgent">🔴 Urgent</SelectItem>
+                  <SelectItem value="normal">🟡 Moyen</SelectItem>
+                  <SelectItem value="faible">🟢 Faible</SelectItem>
                 </SelectContent>
               </Select>
             </div>

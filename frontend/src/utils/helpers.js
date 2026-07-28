@@ -38,11 +38,20 @@ export function getStatusBadgeColor(status) {
 export function getPriorityBadgeColor(priority) {
   const colors = {
     urgent: 'bg-red-600 text-white',
-    normal: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-    faible: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
+    moyen: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+    normal: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+    faible: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
   };
   return colors[priority] || 'bg-gray-100 text-gray-800';
 }
+
+export const PRIORITY_ORDER = { urgent: 0, moyen: 1, normal: 1, faible: 2 };
+
+export const PRIORITY_LABELS = {
+  urgent: '🔴 Urgent',
+  moyen: '🟡 Moyen',
+  faible: '🟢 Faible',
+};
 
 export const INTERVENTION_TYPES = [
   'Installation logiciel',

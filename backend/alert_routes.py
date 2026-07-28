@@ -21,6 +21,14 @@ class TaskAlertRequest(BaseModel):
     custom_message: Optional[str] = None
 
 
+class BulkAlertRequest(BaseModel):
+    priorities: List[Literal["urgent", "moyen", "faible"]]  # Filter by these priorities
+    channel: Literal["sms", "whatsapp"]
+    recipients: List[str]
+    only_pending: bool = True  # Only send for tasks not yet completed
+    custom_message: Optional[str] = None
+
+
 def get_db(request: Request):
     return request.app.state.db
 
@@ -45,9 +53,11 @@ def _get_twilio_client():
 
 def _build_task_message(task: dict, custom_message: Optional[str], sender_name: str) -> str:
     """Build the alert message for a task"""
-    priority_label = {"urgent": "🔴 URGENT", "normal": "🟡 NORMAL", "faible": "🟢 FAIBLE"}.get(
-        task.get("priority", "normal"), "NORMAL"
-    )
+    priority_label = {
+        "urgent": "🔴 URGENT",
+        "moyen": "🟡 MOYEN",
+        "faible": "🟢 FAIBLE"
+    }.get(task.get("priority", "moyen"), "MOYEN")
     status_label = {"todo": "À faire", "in_progress": "En cours", "completed": "Terminé"}.get(
         task.get("status", "todo"), "À faire"
     )
@@ -201,3 +211,131 @@ async def get_alert_logs(task_id: str, request: Request):
     ).sort("sent_at", -1).limit(50).to_list(50)
 
     return {"logs": logs, "total": len(logs)}
+
+
+def _build_bulk_summary_message(tasks: List[dict], priorities: List[str], custom_message: Optional[str], sender_name: str) -> str:
+    """Build a summary message for multiple tasks grouped by priority"""
+    priority_emoji = {"urgent": "🔴", "moyen": "🟡", "faible": "🟢"}
+    priority_order = ["urgent", "moyen", "faible"]
+
+    # Group tasks by priority
+    grouped = {p: [] for p in priority_order}
+    for t in tasks:
+        p = t.get("priority", "moyen")
+        if p in grouped:
+            grouped[p].append(t)
+
+    lines = ["🔔 K-TECHNOLOGY - Alertes Tâches", ""]
+
+    total = len(tasks)
+    priorities_label = ", ".join([f"{priority_emoji.get(p, '')} {p.upper()}" for p in priorities])
+    lines.append(f"📊 {total} tâche(s) à traiter")
+    lines.append(f"Sévérité: {priorities_label}")
+    lines.append("")
+
+    for p in priority_order:
+        items = grouped.get(p, [])
+        if not items or p not in priorities:
+            continue
+        lines.append(f"{priority_emoji[p]} {p.upper()} ({len(items)})")
+        for task in items[:5]:  # Limit to 5 per priority to keep message short
+            title = task.get("title", "")[:60]
+            due = task.get("due_date", "")
+            lines.append(f"  • {title}" + (f" (📅{due})" if due else ""))
+        if len(items) > 5:
+            lines.append(f"  ... et {len(items) - 5} autre(s)")
+        lines.append("")
+
+    if custom_message:
+        lines.extend([f"💬 {custom_message}", ""])
+
+    lines.append(f"— {sender_name}")
+    return "\n".join(lines)
+
+
+@router.post("/bulk")
+async def send_bulk_alerts(alert_data: BulkAlertRequest, request: Request):
+    """Send bulk SMS/WhatsApp alerts for tasks filtered by priority"""
+    db = get_db(request)
+    user = await get_any_authenticated_user(request, db)
+
+    if user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Seuls les administrateurs peuvent envoyer des alertes groupées")
+
+    # Build task filter
+    task_filter = {"priority": {"$in": alert_data.priorities}}
+    if alert_data.only_pending:
+        task_filter["status"] = {"$ne": "completed"}
+
+    tasks = await db.tasks.find(task_filter, {"_id": 0}).sort("priority", 1).to_list(100)
+
+    if not tasks:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Aucune tâche trouvée avec les sévérités: {', '.join(alert_data.priorities)}"
+        )
+
+    # Get Twilio client
+    client = _get_twilio_client()
+
+    if alert_data.channel == "sms":
+        sender_number = os.environ.get("TWILIO_PHONE_NUMBER", "").strip()
+        if not sender_number or sender_number == "+1234567890":
+            raise HTTPException(status_code=500, detail="TWILIO_PHONE_NUMBER non configuré")
+    else:
+        sender_number = os.environ.get("TWILIO_WHATSAPP_NUMBER", "whatsapp:+14155238886").strip()
+        if not sender_number.startswith("whatsapp:"):
+            sender_number = f"whatsapp:{sender_number}"
+
+    sender_name = user.get("name", user.get("email", "K-Technology"))
+    message_body = _build_bulk_summary_message(
+        tasks, alert_data.priorities, alert_data.custom_message, sender_name
+    )
+
+    results = {"success": [], "failed": []}
+    user_id = user.get("user_id") or user.get("email")
+
+    for recipient in alert_data.recipients:
+        try:
+            normalized_to = _normalize_phone(recipient, alert_data.channel)
+
+            def _send():
+                return client.messages.create(
+                    body=message_body,
+                    from_=sender_number,
+                    to=normalized_to
+                )
+
+            msg = await asyncio.to_thread(_send)
+            results["success"].append({
+                "recipient": recipient,
+                "message_sid": msg.sid,
+                "status": msg.status
+            })
+
+            await db.alert_logs.insert_one({
+                "sent_by": user_id,
+                "task_id": "bulk",
+                "priorities": alert_data.priorities,
+                "task_count": len(tasks),
+                "channel": alert_data.channel,
+                "recipient": recipient,
+                "message_sid": msg.sid,
+                "status": msg.status,
+                "sent_at": datetime.now(timezone.utc).isoformat()
+            })
+        except TwilioRestException as e:
+            results["failed"].append({"recipient": recipient, "error": e.msg if hasattr(e, 'msg') else str(e)})
+        except Exception as e:
+            results["failed"].append({"recipient": recipient, "error": str(e)})
+
+    if not results["success"] and results["failed"]:
+        raise HTTPException(status_code=500, detail=f"Échec de l'envoi: {results['failed'][0]['error']}")
+
+    return {
+        "status": "success" if not results["failed"] else "partial",
+        "message": f"Alerte {alert_data.channel.upper()} envoyée à {len(results['success'])} destinataire(s) pour {len(tasks)} tâche(s)",
+        "task_count": len(tasks),
+        "channel": alert_data.channel,
+        "results": results
+    }

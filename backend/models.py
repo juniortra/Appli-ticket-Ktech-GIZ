@@ -100,7 +100,7 @@ class Task(BaseModel):
     title: str
     description: Optional[str] = None
     assigned_to: Optional[str] = None
-    priority: Literal["urgent", "normal", "faible"]
+    priority: Literal["urgent", "moyen", "faible"]
     status: Literal["todo", "in_progress", "completed"]
     due_date: str
     related_form_type: Optional[str] = None
