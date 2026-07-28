@@ -1,0 +1,101 @@
+{
+  "project_name": "Système de Gestion de Maintenance Technique (K-Technology)",
+  "design_context": "DASHBOARDS & ADMIN PANELS (Analytics, Admin, Data-Heavy)",
+  "archetype": "ARCHETYPE 4: SWISS & HIGH-CONTRAST (Authority, Clarity, Truth) mixed with ARCHETYPE 2: THE PERFORMANCE PRO",
+  "theme": "Toggle (Light/Dark Mode)",
+  "typography": {
+    "headings": {
+      "font": "Outfit",
+      "rules": "tight letter spacing (tracking-tight), never use Inter, never center-align by default."
+    },
+    "body": {
+      "font": "IBM Plex Sans",
+      "rules": "left-aligned, highly legible, clean for dense technical data."
+    },
+    "technical_data": {
+      "font": "IBM Plex Mono",
+      "rules": "used for KPIs, IDs, and stats for precision and tabular alignment."
+    }
+  },
+  "colors": {
+    "strategy": "Brutalist Monochrome with high-contrast functional accents.",
+    "dark_mode": {
+      "background": "#0B0C10",
+      "surface": "#13151A",
+      "border": "#2A2D35",
+      "text_primary": "#FFFFFF",
+      "text_secondary": "#8B92A5"
+    },
+    "light_mode": {
+      "background": "#FAFAFA",
+      "surface": "#FFFFFF",
+      "border": "#E2E4E9",
+      "text_primary": "#111827",
+      "text_secondary": "#6B7280"
+    },
+    "accents": {
+      "primary": "#FF5500",
+      "success": "#00FF66",
+      "warning": "#FFCC00",
+      "info": "#00E5FF"
+    },
+    "forbidden_colors": [
+      "#7351B7",
+      "#1B93A4"
+    ]
+  },
+  "layouts": {
+    "strategy": "High Density Grid (MODE B) with 'Grid Borders' (The Technical Look).",
+    "dashboard_grid": "grid-cols-1 md:grid-cols-3 lg:grid-cols-4 with gap-4 or gap-6.",
+    "spacing": "Generous spacing for outer containers (p-8 to p-12), dense padding for table cells (p-3).",
+    "borders": "Visible skeleton. Use border-collapse styles. 1px borders for structure.",
+    "alignment": "Left-align dense content. Top-left for primary KPIs. Avoid center alignment."
+  },
+  "components": {
+    "strategy": "Shadcn/UI, modified for a 'Cardless / Sharp Edge' look.",
+    "forms": "Use Shadcn Input, Select, Form. DO NOT use native HTML <input> or <select>.",
+    "tables": "Compact, dense data display. Clear alignment, row density control. Use master-detail views.",
+    "charts": "Shadcn chart components (Recharts). Line charts for trends, bar charts for comparisons.",
+    "cards": "Flat solid surfaces. 0px (sharp) or max 4px radius. 1px border. No soft drop-shadows."
+  },
+  "visual_enhancers": {
+    "surfaces": "Use 'Grid Borders' to expose the skeleton. Avoid Glassmorphism in main dashboard areas to prevent data refraction. Use Solid Backgrounds with hard borders.",
+    "hover_states": "Slight lift (-translate-y-1), border color brightens. ALWAYS explicitly set text color on hover.",
+    "focus_states": "High contrast ring. focus:ring-2 focus:ring-primary focus:ring-offset-2."
+  },
+  "motion": {
+    "rules": "Minimalist. Micro-interactions for feedback. Avoid universal 'transition: all'. Use specific properties (e.g., transition-colors, transition-transform)."
+  },
+  "accessibility": {
+    "contrast": "Ensure text meets APCA/WCAG standards against backgrounds. Never use pure transparent backgrounds under text.",
+    "attributes": "All interactive elements MUST include a `data-testid` attribute (kebab-case, role-based)."
+  },
+  "media": {
+    "image_urls": {
+      "logo": {
+        "url": "https://images.unsplash.com/photo-1635870025058-c1f6e70515be?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzh8MHwxfHNlYXJjaHwyfHxtaW5pbWFsaXN0JTIwbGV0dGVyJTIwSyUyMGxvZ298ZW58MHx8fHwxNzg1MjQ0MDAzfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Minimalist 3D letter K on a box, to be used as branding/logo."
+      },
+      "login_background": {
+        "url": "https://images.unsplash.com/photo-1709626011485-6fe000ea2dbc?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMjV8MHwxfHNlYXJjaHwyfHxhYnN0cmFjdCUyMGluZHVzdHJpYWwlMjBnZW9tZXRyeXxlbnwwfHx8fDE3ODUyNDQwMDJ8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Abstract black and blue industrial geometry for login/auth screen background."
+      }
+    }
+  },
+  "instructions_to_main_agent": [
+    "IMPORTANT: Create the app using .js extensions for React components, NOT .tsx (since the project uses JS). Adjust Shadcn component generation commands accordingly.",
+    "Avoid generic 'SaaS Blue' and default centered layouts. Implement the Brutalist Monochrome color strategy.",
+    "Never apply a global 'transition: all'. Use targeted transitions.",
+    "Implement real-time styled status indicators for active tasks, incidents (e.g. Signal Orange for Urgent).",
+    "Make charts task-driven (Line for trends, Bar for comparisons). Limit the use of pie/donut charts.",
+    "Implement persistent filters and master-detail view patterns for FDI, RDD, and RDI sheets to avoid excessive navigation.",
+    "Use Phosphor Icons or Lucide React for technical/dense dashboard iconography.",
+    "Do not use HTML-based components for advanced user interactions. Use Shadcn components for everything (dropdowns, calendar, dialogs).",
+    "Use Sonner for toast notifications.",
+    "For the dashboard grid, use a hierarchical F-pattern layout with the primary KPI on top-left.",
+    "Add 'data-testid' to all buttons, links, form inputs, and key UI elements.",
+    "Always explicitly set text color on hover (e.g. hover:bg-slate-900 hover:text-white).",
+    "Build the dashboard side navigation strictly differentiating between User and Admin roles."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": "Do not make generic centered layouts, simplistic gradients, and uniform styling. Create depth through layered design elements with z-index hierarchy. Do not use AI assistant Emoji characters (like 🤖🧠💭). Provide custom scrollbar CSS (no gutter). NEVER use placeholder URLs for images. Emphasize functional clarity over decorative elements for this technical app."
+}
