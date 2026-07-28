@@ -17,6 +17,7 @@ from task_routes import router as task_router
 from dashboard_routes import router as dashboard_router
 from user_routes import router as user_router
 from search_routes import router as search_router
+from email_routes import router as email_router
 from auth_utils import hash_password, verify_password
 
 # MongoDB connection
@@ -40,6 +41,7 @@ api_router.include_router(task_router)
 api_router.include_router(dashboard_router)
 api_router.include_router(user_router)
 api_router.include_router(search_router)
+api_router.include_router(email_router)
 
 @api_router.get("/")
 async def root():

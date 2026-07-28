@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Plus } from 'lucide-react';
+import { FormActions } from '../components/FormActions';
 import { getStatusBadgeColor } from '../utils/helpers';
 import { toast } from 'sonner';
 
@@ -58,9 +59,12 @@ export const RDIPage = () => {
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <CardTitle className="font-mono">{form.objet}</CardTitle>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusBadgeColor(form.statut)}`}>
-                      {form.statut}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${getStatusBadgeColor(form.statut)}`}>
+                        {form.statut}
+                      </span>
+                      <FormActions formType="rdi" formId={form.form_id} formNumber={form.objet} />
+                    </div>
                   </div>
                 </CardHeader>
                 <CardContent>

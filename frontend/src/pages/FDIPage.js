@@ -8,8 +8,9 @@ import { Textarea } from '../components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Checkbox } from '../components/ui/checkbox';
-import { Plus, Eye } from 'lucide-react';
+import { Plus, Eye, Mail, FileDown } from 'lucide-react';
 import { getStatusBadgeColor, getPriorityBadgeColor, INTERVENTION_TYPES, formatDate } from '../utils/helpers';
+import { SendEmailDialog } from '../components/SendEmailDialog';
 import { toast } from 'sonner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
@@ -18,6 +19,7 @@ export const FDIPage = () => {
   const [forms, setForms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [emailDialogForm, setEmailDialogForm] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +37,26 @@ export const FDIPage = () => {
       toast.error('Erreur lors du chargement des fiches');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const downloadPdf = async (form) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/api/email/download-pdf/fdi/${form.form_id}`,
+        { withCredentials: true, responseType: 'blob' }
+      );
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `FDI_${form.numero_fiche}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success('PDF téléchargé');
+    } catch (error) {
+      toast.error('Erreur lors du téléchargement');
     }
   };
 
@@ -100,15 +122,42 @@ export const FDIPage = () => {
                         <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{form.observations}</p>
                       )}
                     </div>
-                    <Button variant="ghost" size="icon" data-testid={`view-fdi-${form.form_id}`}>
-                      <Eye className="h-4 w-4" />
-                    </Button>
+                    <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => downloadPdf(form)}
+                        title="Télécharger PDF"
+                        data-testid={`download-fdi-${form.form_id}`}
+                      >
+                        <FileDown className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setEmailDialogForm(form)}
+                        title="Envoyer par email"
+                        data-testid={`email-fdi-${form.form_id}`}
+                      >
+                        <Mail className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             ))
           )}
         </div>
+      )}
+
+      {emailDialogForm && (
+        <SendEmailDialog
+          open={!!emailDialogForm}
+          onClose={() => setEmailDialogForm(null)}
+          formType="fdi"
+          formId={emailDialogForm.form_id}
+          formNumber={emailDialogForm.numero_fiche}
+        />
       )}
     </div>
   );

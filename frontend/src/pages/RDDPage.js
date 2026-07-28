@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Plus } from 'lucide-react';
+import { FormActions } from '../components/FormActions';
 import { toast } from 'sonner';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
@@ -55,7 +56,10 @@ export const RDDPage = () => {
             forms.map((form) => (
               <Card key={form.form_id}>
                 <CardHeader>
-                  <CardTitle className="font-mono">{form.form_id}</CardTitle>
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="font-mono">{form.form_id}</CardTitle>
+                    <FormActions formType="rdd" formId={form.form_id} formNumber={`${form.marque}_${form.modele}`} />
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2 text-sm">
