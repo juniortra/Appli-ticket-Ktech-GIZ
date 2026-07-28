@@ -19,6 +19,7 @@ from user_routes import router as user_router
 from search_routes import router as search_router
 from email_routes import router as email_router
 from alert_routes import router as alert_router
+from automation_routes import router as automation_router, trigger_automation
 from auth_utils import hash_password, verify_password
 
 # MongoDB connection
