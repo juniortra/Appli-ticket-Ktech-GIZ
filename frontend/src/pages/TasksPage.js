@@ -131,7 +131,7 @@ export const TasksPage = () => {
 
 const TaskCard = ({ task, onUpdateStatus }) => {
   return (
-    <Card className="border-l-4" style={{ borderLeftColor: task.priority === 'urgent' ? '#FF5500' : '#8B92A5' }}>
+    <Card className="border-l-4" style={{ borderLeftColor: task.priority === 'urgent' ? '#DC2626' : '#4A6FA5' }}>
       <CardContent className="p-3">
         <div className="space-y-2">
           <div className="flex items-start justify-between">
@@ -139,8 +139,7 @@ const TaskCard = ({ task, onUpdateStatus }) => {
             <span className={`px-2 py-0.5 rounded text-xs ${getPriorityBadgeColor(task.priority)}`}>
               {task.priority}
             </span>
-          </div>
-          {task.description && <p className="text-xs text-muted-foreground line-clamp-2">{task.description}</p>}
+          </div>          {task.description && <p className="text-xs text-muted-foreground line-clamp-2">{task.description}</p>}
           <div className="text-xs text-muted-foreground">
             Échéance: {task.due_date}
           </div>

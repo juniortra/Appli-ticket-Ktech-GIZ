@@ -34,21 +34,16 @@ export const RegisterPage = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center p-4"
-      style={{
-        backgroundImage: 'url(https://images.unsplash.com/photo-1709626011485-6fe000ea2dbc?crop=entropy&cs=srgb&fm=jpg&q=85)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
+      className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900"
     >
-      <div className="absolute inset-0 bg-black/60" />
-      <Card className="w-full max-w-md relative z-10 border-2" data-testid="register-card">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(30,64,175,0.15),transparent_70%)]" />
+      <Card className="w-full max-w-md relative z-10 border-2 shadow-2xl" data-testid="register-card">
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-4">
             <img
-              src="https://images.unsplash.com/photo-1635870025058-c1f6e70515be?crop=entropy&cs=srgb&fm=jpg&q=85"
+              src="/logo-ktech.png"
               alt="K-Technology"
-              className="h-16 w-16 object-cover rounded-lg"
+              className="h-24 w-auto object-contain"
             />
           </div>
           <CardTitle className="text-2xl text-center font-bold">Créer un compte</CardTitle>

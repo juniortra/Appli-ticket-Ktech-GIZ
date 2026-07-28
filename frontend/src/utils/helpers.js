@@ -37,7 +37,7 @@ export function getStatusBadgeColor(status) {
 
 export function getPriorityBadgeColor(priority) {
   const colors = {
-    urgent: 'bg-[#FF5500] text-white',
+    urgent: 'bg-red-600 text-white',
     normal: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
     faible: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
   };

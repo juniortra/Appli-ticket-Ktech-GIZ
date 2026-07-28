@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
+import { GlobalSearch } from './GlobalSearch';
 import {
   LayoutDashboard,
   FileText,
@@ -56,14 +57,19 @@ export const Layout = () => {
 
           <div className="flex items-center gap-3">
             <img
-              src="https://images.unsplash.com/photo-1635870025058-c1f6e70515be?crop=entropy&cs=srgb&fm=jpg&q=85"
+              src="/logo-ktech.png"
               alt="K-Technology"
-              className="h-10 w-10 object-cover rounded-lg"
+              className="h-10 w-auto object-contain"
             />
-            <div>
-              <h1 className="text-lg font-bold leading-none">K-Technology</h1>
-              <p className="text-xs text-muted-foreground">Gestion de Maintenance</p>
+            <div className="hidden sm:block">
+              <h1 className="text-lg font-bold leading-none text-primary">K-Technology</h1>
+              <p className="text-xs text-muted-foreground">Expertise & Innovation</p>
             </div>
+          </div>
+
+          {/* Global Search Bar */}
+          <div className="flex-1 max-w-md mx-4 hidden md:block">
+            <GlobalSearch />
           </div>
 
           <div className="ml-auto flex items-center gap-4">

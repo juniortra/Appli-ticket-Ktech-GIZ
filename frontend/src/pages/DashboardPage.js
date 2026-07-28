@@ -7,11 +7,12 @@ import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, Cart
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 const COLORS = {
-  primary: '#FF5500',
-  success: '#00FF66',
-  warning: '#FFCC00',
-  info: '#00E5FF',
-  gray: '#8B92A5',
+  primary: '#2563EB',
+  success: '#10B981',
+  warning: '#F59E0B',
+  info: '#0EA5E9',
+  gray: '#64748B',
+  steel: '#4A6FA5',
 };
 
 export const DashboardPage = () => {
@@ -200,14 +201,14 @@ export const DashboardPage = () => {
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-[#00FF66]" />
+                    <CheckCircle2 className="h-4 w-4 text-[#10B981]" />
                     Complétées
                   </span>
                   <span className="font-mono font-bold">{stats.tasks.completed}</span>
                 </div>
                 <div className="w-full bg-secondary rounded-full h-2">
                   <div
-                    className="bg-[#00FF66] h-2 rounded-full"
+                    className="bg-[#10B981] h-2 rounded-full"
                     style={{ width: `${(stats.tasks.completed / stats.tasks.total) * 100}%` }}
                   ></div>
                 </div>
@@ -215,14 +216,14 @@ export const DashboardPage = () => {
               <div>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-[#FFCC00]" />
+                    <Clock className="h-4 w-4 text-[#F59E0B]" />
                     En attente
                   </span>
                   <span className="font-mono font-bold">{stats.tasks.pending}</span>
                 </div>
                 <div className="w-full bg-secondary rounded-full h-2">
                   <div
-                    className="bg-[#FFCC00] h-2 rounded-full"
+                    className="bg-[#F59E0B] h-2 rounded-full"
                     style={{ width: `${(stats.tasks.pending / stats.tasks.total) * 100}%` }}
                   ></div>
                 </div>
@@ -250,15 +251,15 @@ export const DashboardPage = () => {
               <div className="text-sm text-muted-foreground">FRM créées</div>
             </div>
             <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold font-mono text-[#00E5FF]">{stats.recent_activity.fdi}</div>
+              <div className="text-2xl font-bold font-mono text-[#0EA5E9]">{stats.recent_activity.fdi}</div>
               <div className="text-sm text-muted-foreground">FDI créées</div>
             </div>
             <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold font-mono text-[#00FF66]">{stats.recent_activity.rdd}</div>
+              <div className="text-2xl font-bold font-mono text-[#10B981]">{stats.recent_activity.rdd}</div>
               <div className="text-sm text-muted-foreground">RDD créées</div>
             </div>
             <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold font-mono text-[#FFCC00]">{stats.recent_activity.rdi}</div>
+              <div className="text-2xl font-bold font-mono text-[#F59E0B]">{stats.recent_activity.rdi}</div>
               <div className="text-sm text-muted-foreground">RDI créées</div>
             </div>
           </div>
